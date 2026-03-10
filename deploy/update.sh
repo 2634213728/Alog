@@ -8,12 +8,9 @@ set -e
 # ---------- 加载 nvm / Node 环境（非交互式 SSH 不自动加载） ----------
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-
-# ---------- 设置 npm 全局前缀到用户目录（避免需要 sudo） ----------
-NPM_GLOBAL="$HOME/.npm-global"
-mkdir -p "$NPM_GLOBAL"
-npm config set prefix "$NPM_GLOBAL"
-export PATH="$NPM_GLOBAL/bin:$PATH"
+# nvm 激活后，全局 bin 已在 PATH 中（~/.nvm/versions/node/vXX/bin）
+# 如果之前错误设置了 prefix，恢复为 nvm 默认
+npm config delete prefix 2>/dev/null || true
 
 # ---------- 安装 PM2（若未安装） ----------
 if ! command -v pm2 &>/dev/null; then

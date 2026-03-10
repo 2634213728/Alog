@@ -30,10 +30,6 @@ jobs:
             set -e
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-            export NPM_GLOBAL="$HOME/.npm-global"
-            mkdir -p "$NPM_GLOBAL"
-            npm config set prefix "$NPM_GLOBAL"
-            export PATH="$NPM_GLOBAL/bin:$PATH"
 
             DEPLOY_DIR="/home/alog/alog"
             REPO_URL="https://github.com/2634213728/Alog.git"
