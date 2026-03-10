@@ -28,12 +28,16 @@ jobs:
           command_timeout: 10m
           script: |
             set -e
-            # 首次部署：目录或脚本不存在时先克隆仓库
-            if [ ! -f "/home/alog/alog/deploy/update.sh" ]; then
-              mkdir -p /home/alog/alog
-              git clone git@github.com:2634213728/Alog.git /home/alog/alog
+            DEPLOY_DIR="/home/alog/alog"
+            REPO_URL="git@github.com:2634213728/Alog.git"
+
+            if [ ! -d "$DEPLOY_DIR/.git" ]; then
+              # 目录存在但不是 git 仓库（上次克隆中断），清理后重新克隆
+              rm -rf "$DEPLOY_DIR"
+              mkdir -p "$DEPLOY_DIR"
+              git clone "$REPO_URL" "$DEPLOY_DIR"
             fi
-            bash /home/alog/alog/deploy/update.sh
+            bash "$DEPLOY_DIR/deploy/update.sh"
 
       - name: Notify on failure
         if: failure()
