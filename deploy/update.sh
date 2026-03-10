@@ -8,9 +8,12 @@ set -e
 # ---------- 加载 nvm / Node 环境（非交互式 SSH 不自动加载） ----------
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
-# 如果 nvm 不存在，尝试系统级 node 路径
-export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH"
+
+# ---------- 设置 npm 全局前缀到用户目录（避免需要 sudo） ----------
+NPM_GLOBAL="$HOME/.npm-global"
+mkdir -p "$NPM_GLOBAL"
+npm config set prefix "$NPM_GLOBAL"
+export PATH="$NPM_GLOBAL/bin:$PATH"
 
 # ---------- 安装 PM2（若未安装） ----------
 if ! command -v pm2 &>/dev/null; then
