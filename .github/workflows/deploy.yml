@@ -1,0 +1,37 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+# 防止并发部署互相干扰
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: SSH Deploy to Ubuntu Server
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          # 脚本执行超时 10 分钟
+          command_timeout: 10m
+          script: |
+            set -e
+            cd /opt/alog
+            bash deploy/update.sh
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::部署失败，请检查服务器日志：pm2 logs alog"
