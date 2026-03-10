@@ -11,6 +11,6 @@ export async function GET(_req: NextRequest) {
   })
 
   return NextResponse.json({
-    tags: tags.map((t) => ({ id: t.id, name: t.name, slug: t.slug, count: t._count.logs })),
+    tags: tags.map((t: typeof tags[number]) => ({ id: t.id, name: t.name, slug: t.slug, count: t._count.logs })),
   })
 }
