@@ -6,7 +6,7 @@ module.exports = {
     {
       name: 'alog',
       script: 'node_modules/.bin/next',
-      args: 'start -p 3000',
+      args: 'start -p 3001',
       cwd: '/home/alog/alog/website',
       env: {
         NODE_ENV: 'production',
