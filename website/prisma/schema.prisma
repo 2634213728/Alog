@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Log {
+  id        String   @id @default(uuid())
+  type      String
+  title     String
+  content   String
+  source    String   @default("unknown")
+  author    String   @default("")
+  workspace String   @default("")
+  viewCount Int      @default(0)
+  createdAt DateTime @default(now())
+  apiKeyId  String?
+  apiKey    ApiKey?  @relation(fields: [apiKeyId], references: [id])
+  tags      LogTag[]
+}
+
+model Tag {
+  id   String   @id @default(uuid())
+  name String   @unique
+  slug String   @unique
+  logs LogTag[]
+}
+
+model LogTag {
+  logId String
+  tagId String
+  log   Log    @relation(fields: [logId], references: [id], onDelete: Cascade)
+  tag   Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([logId, tagId])
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  name      String
+  key       String   @unique
+  source    String
+  author    String   @default("")
+  createdAt DateTime @default(now())
+  logs      Log[]
+}
