@@ -77,7 +77,7 @@ export default async function LogDetailPage({ params }: Props) {
         {/* Tags */}
         {log.tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {log.tags.map(({ tag }) => (
+            {log.tags.map(({ tag }: { tag: { id: string; name: string; slug: string } }) => (
               <TagBadge key={tag.id} name={tag.name} slug={tag.slug} size="md" />
             ))}
           </div>
