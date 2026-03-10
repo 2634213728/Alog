@@ -9,6 +9,7 @@ set -e
 DEPLOY_DIR="/opt/alog"
 WEBSITE_DIR="$DEPLOY_DIR/website"
 LOG_DIR="/var/log/alog"
+REPO_URL="git@github.com:2634213728/Alog.git"
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 
 echo "=========================================="
@@ -18,13 +19,38 @@ echo "=========================================="
 # ---------- 1. 拉取最新代码 ----------
 echo ""
 echo "▶ [1/5] 拉取最新代码..."
-cd "$DEPLOY_DIR"
-git pull origin master
+if [ ! -d "$DEPLOY_DIR/.git" ]; then
+  echo "⚠️  目录不存在或非 git 仓库，执行首次克隆..."
+  sudo mkdir -p "$DEPLOY_DIR"
+  sudo chown -R "$USER":"$USER" "$DEPLOY_DIR"
+  git clone "$REPO_URL" "$DEPLOY_DIR"
+else
+  cd "$DEPLOY_DIR"
+  git pull origin main
+fi
 echo "✅ 代码更新完成"
 
 # ---------- 2. 安装/更新依赖 ----------
 echo ""
 echo "▶ [2/5] 安装依赖..."
+
+# 首次部署：若 .env.production 不存在则自动生成
+ENV_FILE="$WEBSITE_DIR/.env.production"
+if [ ! -f "$ENV_FILE" ]; then
+  echo "⚠️  未找到 .env.production，自动生成..."
+  mkdir -p "$WEBSITE_DIR"
+  ADMIN_TOKEN=$(openssl rand -hex 24)
+  cat > "$ENV_FILE" << EOF
+DATABASE_URL="file:../../data/alog.db"
+ADMIN_TOKEN="$ADMIN_TOKEN"
+EOF
+  echo "✅ 已生成 .env.production（ADMIN_TOKEN=$ADMIN_TOKEN）"
+  echo "   ⚠️  请保存此 Token，后续无法再次查看！"
+fi
+
+# 首次部署：确保数据目录存在
+mkdir -p "$DEPLOY_DIR/data"
+
 cd "$WEBSITE_DIR"
 # 使用 npm ci 保证与 package-lock.json 一致
 npm ci --production=false
