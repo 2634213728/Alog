@@ -6,6 +6,23 @@
 
 ---
 
+## [1.5.0] - 2026-03-11
+
+### 新增
+- 日志编辑功能：独立编辑页 `/edit/[id]`，左侧表单 + 右侧 Markdown 实时预览
+- 日志删除功能：详情页底部及列表卡片 hover 时均可删除，二次确认弹窗防误操作
+- `PATCH /api/logs/[id]`：编辑日志接口，支持修改标题、内容、类型、标签
+- `DELETE /api/logs/[id]`：删除日志接口，同步清理标签关联
+- `POST /api/auth/verify`：Token 验证接口，兼容 ADMIN_TOKEN 和任意 API Key
+- `TokenGate` 组件：统一的 Token 输入弹窗，验证通过后缓存至 `sessionStorage`，本次会话内免重复输入
+- `LogActions` 组件：详情页底部的编辑/删除操作区
+
+### 修改
+- `LogCard`：hover 时右上角显示编辑（✏️）和删除（🗑）快捷按钮
+- 详情页 footer：新增编辑/删除操作按钮组
+
+---
+
 ## [1.4.0] - 2026-03-11
 
 ### 新增

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import TagBadge from '@/components/TagBadge'
 import MarkdownRenderer from '@/components/MarkdownRenderer'
 import ViewCounter from '@/components/ViewCounter'
+import LogActions from '@/components/LogActions'
 import { formatDateTime, getSourceColor } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
@@ -103,11 +104,14 @@ export default async function LogDetailPage({ params }: Props) {
 
       {/* Footer */}
       <div className="flex items-center justify-between text-xs font-mono text-slate-600 pb-8">
-        <span>ID: {log.id}</span>
         <span className="flex items-center gap-3">
+          <span>ID: {log.id}</span>
           {log.viewCount > 0 && (
             <span className="text-slate-600">👁 {log.viewCount} 次访问</span>
           )}
+        </span>
+        <span className="flex items-center gap-3">
+          <LogActions logId={log.id} logType={log.type} />
           <Link
             href={`/${type}`}
             className="hover:text-[#00d4ff] transition-colors"
