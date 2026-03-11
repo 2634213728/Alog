@@ -6,6 +6,13 @@
 
 ---
 
+## [1.5.1] - 2026-03-11
+
+### 修复
+- `CopyButton` 在 HTTP 明文环境（如 `http://101.33.55.60:3001`）下无法复制 API Key —— `navigator.clipboard` 仅在安全上下文（HTTPS/localhost）可用，新增 `document.execCommand('copy')` 降级方案，并加入 try-catch 防止静默报错
+
+---
+
 ## [1.5.0] - 2026-03-11
 
 ### 新增
