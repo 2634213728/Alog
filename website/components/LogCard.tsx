@@ -22,12 +22,12 @@ const TYPE_CONFIG = {
   daily: {
     label: '日报',
     icon: '📅',
-    color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/30',
+    style: { color: 'var(--accent-green)', background: 'rgba(16,185,129,0.1)', borderColor: 'rgba(16,185,129,0.3)' }
   },
   blog: {
     label: '博客',
     icon: '📝',
-    color: 'text-purple-400 bg-purple-400/10 border-purple-400/30',
+    style: { color: 'var(--accent2)', background: 'rgba(var(--accent2-rgb),0.1)', borderColor: 'rgba(var(--accent2-rgb),0.3)' }
   },
 }
 
@@ -105,18 +105,25 @@ export default function LogCard({ id, type, title, content, source, author, crea
 
       {/* Delete confirm */}
       {showConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center"
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
           onClick={(e) => e.stopPropagation()}
-          style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}>
-          <div className="alog-card p-6 w-full max-w-sm mx-4">
-            <h3 className="text-base font-semibold font-mono mb-2" style={{ color: '#e2e8f0' }}>确认删除</h3>
-            <p className="text-sm mb-4" style={{ color: '#94a3b8' }}>此操作不可恢复，确认删除这条日志吗？</p>
+          style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
+          <div className="alog-card p-6 w-full max-w-sm" style={{ background: 'var(--card-bg)' }}>
+            <h3 className="text-base font-semibold font-mono mb-2" style={{ color: 'var(--text-primary)' }}>确认删除</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>此操作不可恢复，确认删除这条日志吗？</p>
             <div className="flex gap-2 justify-end">
               <button onClick={(e) => { e.stopPropagation(); setShowConfirm(false) }}
-                className="px-4 py-1.5 rounded-md text-sm font-mono text-slate-400" style={{ background: '#ffffff08' }}>取消</button>
+                className="px-4 py-1.5 rounded-md text-sm font-mono transition-colors" 
+                style={{ color: 'var(--text-muted)', background: 'rgba(var(--accent-rgb),0.05)' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
+                取消
+              </button>
               <button onClick={(e) => { e.stopPropagation(); doDelete() }} disabled={deleting}
-                className="px-4 py-1.5 rounded-md text-sm font-mono disabled:opacity-50"
-                style={{ background: '#f8717120', border: '1px solid #f8717150', color: '#f87171' }}>
+                className="px-4 py-1.5 rounded-md text-sm font-mono disabled:opacity-50 transition-colors"
+                style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444' }}
+                onMouseEnter={(e) => !deleting && (e.currentTarget.style.background = 'rgba(239,68,68,0.15)')}
+                onMouseLeave={(e) => !deleting && (e.currentTarget.style.background = 'rgba(239,68,68,0.1)')}>
                 {deleting ? '删除中...' : '确认删除'}
               </button>
             </div>
@@ -127,17 +134,22 @@ export default function LogCard({ id, type, title, content, source, author, crea
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2 flex-wrap">
           {/* Type badge */}
-          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-mono font-medium ${config.color}`}>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-mono font-medium"
+            style={config.style}>
             {config.icon} {config.label}
           </span>
           {/* Source badge */}
-          <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-xs font-mono ${sourceColor}`}>
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full border text-xs font-mono"
+            style={sourceColor}>
             {source}
           </span>
           {/* Author */}
           {author && (
             <span
-              className="text-xs text-slate-400 hover:text-[#00d4ff] cursor-pointer transition-colors duration-200"
+              className="text-xs cursor-pointer transition-colors duration-200"
+              style={{ color: 'var(--text-muted)' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
               onClick={(e) => { e.stopPropagation(); window.location.href = `/authors/${encodeURIComponent(author)}` }}
             >
               {author}
@@ -151,7 +163,9 @@ export default function LogCard({ id, type, title, content, source, author, crea
             <button
               onClick={(e) => triggerAction('edit', e)}
               className="px-2 py-0.5 rounded text-xs font-mono transition-colors"
-              style={{ background: '#00d4ff12', border: '1px solid #00d4ff30', color: '#00d4ff' }}
+              style={{ background: 'rgba(var(--accent-rgb),0.1)', border: '1px solid rgba(var(--accent-rgb),0.2)', color: 'var(--accent)' }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(var(--accent-rgb),0.15)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(var(--accent-rgb),0.1)'}
               title="编辑"
             >
               ✏️
@@ -159,26 +173,31 @@ export default function LogCard({ id, type, title, content, source, author, crea
             <button
               onClick={(e) => triggerAction('delete', e)}
               className="px-2 py-0.5 rounded text-xs font-mono transition-colors"
-              style={{ background: '#f8717112', border: '1px solid #f8717130', color: '#f87171' }}
+              style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444' }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(239,68,68,0.1)'}
               title="删除"
             >
               🗑
             </button>
           </div>
-          <time className="text-xs font-mono text-slate-500">
+          <time className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
             {formatDateTime(createdAt)}
           </time>
         </div>
       </div>
 
       {/* Title */}
-      <h2 className="text-[#e2e8f0] font-semibold text-base mb-2 group-hover:text-[#00d4ff] transition-colors duration-200 leading-snug">
+      <h2 className="font-semibold text-base mb-2 transition-colors duration-200 leading-snug"
+        style={{ color: 'var(--text-primary)' }}
+        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
+        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}>
         {title}
       </h2>
 
       {/* Preview */}
       {preview && (
-        <p className="text-slate-500 text-sm leading-relaxed mb-3 line-clamp-2">
+        <p className="text-sm leading-relaxed mb-3 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
           {preview}…
         </p>
       )}
@@ -190,7 +209,7 @@ export default function LogCard({ id, type, title, content, source, author, crea
             <TagBadge key={tag.id} name={tag.name} slug={tag.slug} />
           ))}
           {viewCount > 0 && (
-            <span className="ml-auto text-xs font-mono text-slate-500 flex items-center gap-1">
+            <span className="ml-auto text-xs font-mono flex items-center gap-1" style={{ color: 'var(--text-muted)' }}>
               👁 {viewCount}
             </span>
           )}
@@ -198,7 +217,8 @@ export default function LogCard({ id, type, title, content, source, author, crea
       )}
 
       {/* Bottom line glow on hover */}
-      <div className="mt-4 h-px bg-gradient-to-r from-transparent via-[#00d4ff20] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="mt-4 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+        style={{ background: 'linear-gradient(to right, transparent, rgba(var(--accent-rgb),0.25), transparent)' }} />
     </article>
   )
 }

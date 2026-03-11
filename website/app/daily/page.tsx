@@ -25,10 +25,10 @@ export default async function DailyPage() {
       <div>
         <div className="flex items-center gap-3">
           <span className="text-2xl">📅</span>
-          <h1 className="text-2xl font-bold font-mono text-[#10b981]">工作日报</h1>
+          <h1 className="text-2xl font-bold font-mono tracking-wide" style={{ color: 'var(--accent-green)' }}>工作日报</h1>
         </div>
-        <p className="text-slate-500 text-sm mt-1 ml-10">
-          共 <span className="text-[#10b981] font-mono">{logs.length}</span> 篇日报
+        <p className="text-sm mt-1 ml-10" style={{ color: 'var(--text-muted)' }}>
+          共 <span className="font-mono" style={{ color: 'var(--text-primary)' }}>{logs.length}</span> 篇日报
         </p>
       </div>
 
@@ -45,8 +45,8 @@ export default async function DailyPage() {
       {logs.length === 0 ? (
         <div className="text-center py-24">
           <div className="text-4xl mb-4 opacity-30">📅</div>
-          <p className="text-slate-500 font-mono text-sm">暂无日报</p>
-          <p className="text-slate-600 text-xs mt-2">对 AI 说「生成alog日报」即可推送</p>
+          <p className="font-mono text-sm" style={{ color: 'var(--text-muted)' }}>暂无日报</p>
+          <p className="text-xs mt-2" style={{ color: 'var(--text-muted)' }}>对 AI 说「生成alog日报」即可推送</p>
         </div>
       ) : (
         <div className="space-y-4">

@@ -80,7 +80,7 @@ export default async function AuthorsPage() {
                       {author.name}
                     </span>
                   </div>
-                  <span className={`text-xs font-mono px-2 py-0.5 rounded-full border ${sourceColor}`}>
+                  <span className="text-xs font-mono px-2 py-0.5 rounded-full border" style={sourceColor}>
                     {author.source}
                   </span>
                 </div>

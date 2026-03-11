@@ -4,16 +4,17 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState, useRef, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
+import { LayoutDashboard, List, CalendarDays, FileText, Tags, Users, History, Link as LinkIcon, Search, X } from 'lucide-react'
 
 const navItems = [
-  { label: '概览', href: '/' },
-  { label: '日志', href: '/logs' },
-  { label: '日报', href: '/daily' },
-  { label: '博客', href: '/blog' },
-  { label: '标签', href: '/tags' },
-  { label: '作者', href: '/authors' },
-  { label: '更新日志', href: '/changelog' },
-  { label: '接入', href: '/setup' },
+  { label: '概览', href: '/', icon: LayoutDashboard },
+  { label: '日志', href: '/logs', icon: List },
+  { label: '日报', href: '/daily', icon: CalendarDays },
+  { label: '博客', href: '/blog', icon: FileText },
+  { label: '标签', href: '/tags', icon: Tags },
+  { label: '作者', href: '/authors', icon: Users },
+  { label: '更新日志', href: '/changelog', icon: History },
+  { label: '接入', href: '/setup', icon: LinkIcon },
 ]
 
 export default function Header() {
@@ -85,20 +86,22 @@ export default function Header() {
 
         {/* Nav */}
         {!searchOpen && (
-          <nav className="flex items-center gap-0.5 overflow-x-auto">
+          <nav className="flex items-center gap-1 overflow-x-auto no-scrollbar py-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href
+              const Icon = item.icon
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="px-2.5 py-1.5 rounded-md text-sm font-medium transition-all duration-200 font-mono whitespace-nowrap"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 font-mono whitespace-nowrap"
                   style={isActive
-                    ? { color: 'var(--accent)', background: 'rgba(var(--accent-rgb),0.09)', border: '1px solid rgba(var(--accent-rgb),0.22)' }
-                    : { color: 'var(--text-muted)' }}
-                  onMouseEnter={e => { if (!isActive) { (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; (e.currentTarget as HTMLElement).style.background = 'rgba(var(--accent-rgb),0.05)' } }}
-                  onMouseLeave={e => { if (!isActive) { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)'; (e.currentTarget as HTMLElement).style.background = '' } }}
+                    ? { color: 'var(--text-primary)', background: 'var(--card-bg)', border: '1px solid var(--border-hover)', boxShadow: '0 0 12px rgba(var(--accent-rgb),0.15)' }
+                    : { color: 'var(--text-muted)', border: '1px solid transparent' }}
+                  onMouseEnter={e => { if (!isActive) { (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; (e.currentTarget as HTMLElement).style.background = 'rgba(var(--accent-rgb),0.05)'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)' } }}
+                  onMouseLeave={e => { if (!isActive) { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)'; (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.borderColor = 'transparent' } }}
                 >
+                  <Icon className="w-3.5 h-3.5" style={{ color: isActive ? 'var(--accent)' : 'inherit' }} />
                   {item.label}
                 </Link>
               )
@@ -111,17 +114,15 @@ export default function Header() {
           {/* Search toggle */}
           <button
             onClick={() => { setSearchOpen((o) => !o); setSearchValue('') }}
-            className={`p-1.5 rounded-md transition-all duration-200 ${searchOpen ? '' : 'theme-toggle'}`}
+            className={`p-1.5 rounded-full transition-all duration-200 ${searchOpen ? '' : 'hover:bg-[rgba(var(--accent-rgb),0.1)]'}`}
             style={searchOpen
-              ? { color: 'var(--accent)', background: 'rgba(var(--accent-rgb),0.12)', border: '1px solid rgba(var(--accent-rgb),0.3)' }
-              : {}}
+              ? { color: 'var(--text-primary)', background: 'var(--card-bg)', border: '1px solid var(--border-hover)' }
+              : { color: 'var(--text-muted)', border: '1px solid transparent' }}
             title={searchOpen ? '关闭搜索' : '搜索日志'}
           >
             {searchOpen
-              ? <span className="text-sm font-mono leading-none">✕</span>
-              : <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-                </svg>
+              ? <X className="w-4 h-4" />
+              : <Search className="w-4 h-4" />
             }
           </button>
           {/* Theme toggle */}

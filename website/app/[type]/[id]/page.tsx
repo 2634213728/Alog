@@ -38,7 +38,10 @@ export default async function LogDetailPage({ params }: Props) {
       {/* Back */}
       <Link
         href={`/${type}`}
-        className="inline-flex items-center gap-2 text-sm font-mono text-slate-500 hover:text-[#00d4ff] transition-colors"
+        className="inline-flex items-center gap-2 text-sm font-mono transition-colors"
+        style={{ color: 'var(--text-muted)' }}
+        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
+        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
       >
         ← 返回{config.label}列表
       </Link>
@@ -54,24 +57,27 @@ export default async function LogDetailPage({ params }: Props) {
           >
             {config.label}
           </span>
-          <span className={`text-xs font-mono px-2 py-0.5 rounded-full border ${sourceColor}`}>
+          <span className="text-xs font-mono px-2 py-0.5 rounded-full border" style={sourceColor as any}>
             {log.source}
           </span>
           {log.author && (
             <Link
               href={`/authors/${encodeURIComponent(log.author)}`}
-              className="text-xs font-mono text-slate-400 hover:text-[#00d4ff] transition-colors"
+              className="text-xs font-mono transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
             >
               {log.author}
             </Link>
           )}
-          <time className="text-xs font-mono text-slate-500 ml-auto">
+          <time className="text-xs font-mono ml-auto" style={{ color: 'var(--text-muted)' }}>
             {formatDateTime(log.createdAt)}
           </time>
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold text-[#e2e8f0] leading-tight">
+        <h1 className="text-3xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>
           {log.title}
         </h1>
 

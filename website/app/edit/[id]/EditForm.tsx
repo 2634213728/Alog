@@ -81,11 +81,14 @@ export default function EditForm({ log }: EditFormProps) {
       <div className="flex items-center justify-between mb-6">
         <Link
           href={`/${log.type}/${log.id}`}
-          className="text-sm font-mono text-slate-500 hover:text-[#00d4ff] transition-colors"
+          className="text-sm font-mono transition-colors"
+          style={{ color: 'var(--text-muted)' }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
         >
           ← 取消
         </Link>
-        <h1 className="text-base font-semibold font-mono" style={{ color: '#e2e8f0' }}>
+        <h1 className="text-base font-semibold font-mono" style={{ color: 'var(--text-primary)' }}>
           ✏️ 编辑日志
         </h1>
         <div className="flex items-center gap-2">

@@ -34,14 +34,14 @@ export function generateApiKey(): string {
   return key
 }
 
-export const SOURCE_COLORS: Record<string, string> = {
-  cursor: 'text-cyan-400 border-cyan-400/40 bg-cyan-400/10',
-  copilot: 'text-purple-400 border-purple-400/40 bg-purple-400/10',
-  claude: 'text-orange-400 border-orange-400/40 bg-orange-400/10',
-  windsurf: 'text-green-400 border-green-400/40 bg-green-400/10',
-  unknown: 'text-slate-400 border-slate-400/40 bg-slate-400/10',
+export const SOURCE_COLORS: Record<string, { color: string, background: string, borderColor: string }> = {
+  cursor: { color: 'var(--accent)', background: 'rgba(var(--accent-rgb),0.1)', borderColor: 'rgba(var(--accent-rgb),0.3)' },
+  copilot: { color: 'var(--accent2)', background: 'rgba(var(--accent2-rgb),0.1)', borderColor: 'rgba(var(--accent2-rgb),0.3)' },
+  claude: { color: '#f97316', background: 'rgba(249,115,22,0.1)', borderColor: 'rgba(249,115,22,0.3)' },
+  windsurf: { color: '#10b981', background: 'rgba(16,185,129,0.1)', borderColor: 'rgba(16,185,129,0.3)' },
+  unknown: { color: 'var(--text-muted)', background: 'rgba(100,116,139,0.1)', borderColor: 'rgba(100,116,139,0.3)' },
 }
 
-export function getSourceColor(source: string): string {
+export function getSourceColor(source: string) {
   return SOURCE_COLORS[source.toLowerCase()] ?? SOURCE_COLORS['unknown']
 }
