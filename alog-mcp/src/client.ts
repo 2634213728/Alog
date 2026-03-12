@@ -44,6 +44,14 @@ function authHeaders(): Record<string, string> {
   }
 }
 
+// PATCH /api/logs/[id] and DELETE /api/logs/[id] use x-token header instead of Authorization
+function tokenHeaders(): Record<string, string> {
+  return {
+    'x-token': config.apiKey,
+    'Content-Type': 'application/json; charset=utf-8',
+  }
+}
+
 async function request<T>(path: string, opts?: RequestInit): Promise<T> {
   const url = `${config.serverUrl}${path}`
   const res = await fetch(url, opts)
@@ -109,7 +117,7 @@ export async function updateLog(
 ): Promise<{ log: AlogLog }> {
   return request(`/api/logs/${id}`, {
     method: 'PATCH',
-    headers: authHeaders(),
+    headers: tokenHeaders(),
     body: utf8Body(body),
   })
 }
@@ -117,6 +125,6 @@ export async function updateLog(
 export async function deleteLog(id: string): Promise<{ success: boolean }> {
   return request(`/api/logs/${id}`, {
     method: 'DELETE',
-    headers: authHeaders(),
+    headers: tokenHeaders(),
   })
 }

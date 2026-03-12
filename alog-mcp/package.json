@@ -1,6 +1,6 @@
 {
   "name": "alog-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MCP Server for Alog work log system — push, search, edit and delete logs via AI tools",
   "main": "dist/index.js",
   "bin": {

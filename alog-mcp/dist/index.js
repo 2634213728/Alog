@@ -29,6 +29,12 @@ function authHeaders() {
     "Content-Type": "application/json; charset=utf-8"
   };
 }
+function tokenHeaders() {
+  return {
+    "x-token": config.apiKey,
+    "Content-Type": "application/json; charset=utf-8"
+  };
+}
 async function request(path, opts) {
   const url = `${config.serverUrl}${path}`;
   const res = await fetch(url, opts);
@@ -67,14 +73,14 @@ async function pushLog(body) {
 async function updateLog(id, body) {
   return request(`/api/logs/${id}`, {
     method: "PATCH",
-    headers: authHeaders(),
+    headers: tokenHeaders(),
     body: utf8Body(body)
   });
 }
 async function deleteLog(id) {
   return request(`/api/logs/${id}`, {
     method: "DELETE",
-    headers: authHeaders()
+    headers: tokenHeaders()
   });
 }
 
