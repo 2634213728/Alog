@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { unstable_cache } from 'next/cache'
 import Link from 'next/link'
 
 function fmtMB(bytes: number) {
@@ -11,29 +12,38 @@ function memBar(used: number, total: number) {
   return { pct, bar: '█'.repeat(filled) + '░'.repeat(10 - filled) }
 }
 
+// Cache DB queries for 30 seconds to avoid hitting SQLite on every request
+const getSidebarData = unstable_cache(
+  async () => {
+    const now = new Date()
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const [totalLogs, dailyCount, blogCount, todayCount, topTags] = await Promise.all([
+      prisma.log.count(),
+      prisma.log.count({ where: { type: 'daily' } }),
+      prisma.log.count({ where: { type: 'blog' } }),
+      prisma.log.count({ where: { createdAt: { gte: todayStart } } }),
+      prisma.tag.findMany({
+        include: { _count: { select: { logs: true } } },
+        orderBy: { logs: { _count: 'desc' } },
+        take: 10,
+      }),
+    ])
+    return { totalLogs, dailyCount, blogCount, todayCount, topTags }
+  },
+  ['sidebar-data'],
+  { revalidate: 30 }
+)
+
 export default async function Sidebar() {
   const mem = process.memoryUsage()
   const heapUsed  = Number(fmtMB(mem.heapUsed))
   const heapTotal = Number(fmtMB(mem.heapTotal))
   const rss       = Number(fmtMB(mem.rss))
   const external  = Number(fmtMB(mem.external))
-  const { pct: heapPct, bar: heapBar } = memBar(mem.heapUsed, mem.heapTotal)
+  const { pct: heapPct } = memBar(mem.heapUsed, mem.heapTotal)
   const heapColor = heapPct >= 80 ? '#f87171' : heapPct >= 60 ? '#fb923c' : 'var(--accent-green)'
 
-  const now = new Date()
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-
-  const [totalLogs, dailyCount, blogCount, todayCount, topTags] = await Promise.all([
-    prisma.log.count(),
-    prisma.log.count({ where: { type: 'daily' } }),
-    prisma.log.count({ where: { type: 'blog' } }),
-    prisma.log.count({ where: { createdAt: { gte: todayStart } } }),
-    prisma.tag.findMany({
-      include: { _count: { select: { logs: true } } },
-      orderBy: { logs: { _count: 'desc' } },
-      take: 10,
-    }),
-  ])
+  const { totalLogs, dailyCount, blogCount, todayCount, topTags } = await getSidebarData()
 
   const categories = [
     { label: '全部日志', href: '/logs',  icon: '◈', count: totalLogs },

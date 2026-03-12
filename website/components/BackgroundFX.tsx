@@ -7,14 +7,19 @@ export default function BackgroundFX() {
     const container = document.getElementById('alog-particles')
     if (!container || container.childElementCount > 0) return
 
-    for (let i = 0; i < 25; i++) {
+    // Reduced from 25 → 12 particles; use DocumentFragment for single reflow
+    const frag = document.createDocumentFragment()
+    for (let i = 0; i < 12; i++) {
       const p = document.createElement('div')
       p.className = 'alog-particle'
-      p.style.left = Math.random() * 100 + '%'
-      p.style.animationDelay = Math.random() * 20 + 's'
-      p.style.animationDuration = (15 + Math.random() * 10) + 's'
-      container.appendChild(p)
+      p.style.cssText = [
+        `left:${(Math.random() * 96).toFixed(1)}%`,
+        `animation-delay:${(Math.random() * 20).toFixed(1)}s`,
+        `animation-duration:${(15 + Math.random() * 10).toFixed(1)}s`,
+      ].join(';')
+      frag.appendChild(p)
     }
+    container.appendChild(frag)
   }, [])
 
   return (

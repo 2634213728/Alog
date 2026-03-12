@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 import LogCard from '@/components/LogCard'
 import TagBadge from '@/components/TagBadge'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 30
 
 export default async function BlogPage() {
   const [logs, tags] = await Promise.all([

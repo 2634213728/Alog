@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /* ============================================================
@@ -101,12 +100,19 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text-primary);
-  font-family: 'Noto Sans SC', 'Inter', sans-serif;
+  /* Use next/font CSS vars first, fallback to named fonts */
+  font-family: var(--font-sc), var(--font-inter), 'Noto Sans SC', 'Inter', sans-serif;
   min-height: 100vh;
   transition: background 0.3s ease, color 0.3s ease;
   background-image:
     radial-gradient(ellipse at 20% 50%, var(--grad1) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 20%, var(--grad2) 0%, transparent 50%);
+}
+
+/* Map next/font mono variable to all monospace elements */
+code, pre, kbd, samp,
+[class*="font-mono"], [class*="mono"] {
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
 }
 
 /* Dark-mode hex grid texture */
@@ -334,6 +340,7 @@ body {
   z-index: -1;
   pointer-events: none;
   overflow: hidden;
+  contain: strict;
 }
 .alog-particle {
   position: absolute;
@@ -345,6 +352,7 @@ body {
   opacity: 0;
   animation: particleFloat linear infinite;
   box-shadow: 0 0 6px var(--accent), 0 0 12px var(--accent);
+  will-change: transform, opacity;
 }
 [data-theme="light"] .alog-particle {
   box-shadow: 0 0 4px var(--accent);
@@ -1139,4 +1147,30 @@ body {
 }
 @media (max-width: 768px) {
   .stats-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Accessibility: reduce motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .alog-particle { display: none; }
+  .logo-shimmer { animation: none; background-position: 0% 0%; }
+  .hero-neon { animation: none; }
+  .badge-scan::after { display: none; }
+}
+
+/* ── Accessibility: reduce motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .alog-particle { display: none; }
+  .logo-shimmer { animation: none; background-position: 0% 0%; }
+  .hero-neon { animation: none; }
+  .badge-scan::after { display: none; }
 }

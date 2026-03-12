@@ -4,6 +4,20 @@
 
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [1.9.1] - 2026-03-12
+
+### 性能优化
+- `next.config.ts`：启用 `compress: true`、静态资源 `Cache-Control: immutable`、`optimizePackageImports` 按需摇树
+- 所有列表/首页由 `force-dynamic` 改为 `revalidate = 30`，开启页面级 ISR 缓存
+- `Sidebar`：5 条 Prisma 查询改用 `unstable_cache`（30s TTL），每请求重复开销归零
+- `BackgroundFX`：粒子数量 25 → 12，使用 `DocumentFragment` 批量挂载减少重排，`.alog-particles` 添加 `contain: strict`
+- `StatCounterGrid`：4 个独立 `IntersectionObserver` 合并为父级单实例，子卡片共享触发信号
+- `globals.css`：`.alog-particle` 与 `.logo-shimmer` 添加 `will-change: transform / background-position`，提升合成层性能
+- 新增 `@media (prefers-reduced-motion: reduce)` 全局规则，无障碍访问时禁用所有关键帧动画
+- Google Fonts 从 CSS `@import`（渲染阻塞）迁移至 `next/font/google`（本地托管 + `display: swap`），消除 FOIT
+
+---
+
 ## [1.9.0] - 2026-03-12
 
 ### 新增

@@ -1,9 +1,29 @@
 import type { Metadata } from "next";
+import { Inter, JetBrains_Mono, Noto_Sans_SC } from 'next/font/google';
 import "./globals.css";
 import Header from "@/components/Header";
 import ThemeProvider from "@/components/ThemeProvider";
 import BackgroundFX from "@/components/BackgroundFX";
 import Sidebar from "@/components/Sidebar";
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
+})
+const notoSansSC = Noto_Sans_SC({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-sc',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: "Alog — AI 工作日志",
@@ -29,7 +49,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="antialiased">
+      <body className={`antialiased ${inter.variable} ${jetbrainsMono.variable} ${notoSansSC.variable}`}>
         <ThemeProvider>
           <BackgroundFX />
           <Header />

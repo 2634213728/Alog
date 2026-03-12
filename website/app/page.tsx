@@ -4,7 +4,7 @@ import TagBadge from '@/components/TagBadge'
 import Link from 'next/link'
 import StatCounterGrid from '@/components/StatCounterGrid'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 30
 
 const FEATURES = [
   {

@@ -3,7 +3,7 @@ import LogCard from '@/components/LogCard'
 import TagBadge from '@/components/TagBadge'
 import Link from 'next/link'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 30
 
 export default async function LogsPage() {
   const [logs, tags] = await Promise.all([
