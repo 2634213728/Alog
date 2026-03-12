@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import Link from 'next/link'
+import fs from 'fs'
+import path from 'path'
 
 function fmtMB(bytes: number) {
   return (bytes / 1024 / 1024).toFixed(1)
@@ -10,6 +12,22 @@ function memBar(used: number, total: number) {
   const pct = Math.min(Math.round((used / total) * 100), 100)
   const filled = Math.round(pct / 10)
   return { pct, bar: '█'.repeat(filled) + '░'.repeat(10 - filled) }
+}
+
+// Read backup directory metadata (no cache needed — called once per render)
+function getBackupStatus(): { count: number; latestAt: Date | null } {
+  try {
+    const backupDir = path.join(process.cwd(), '..', 'data', 'backup')
+    if (!fs.existsSync(backupDir)) return { count: 0, latestAt: null }
+    const files = fs
+      .readdirSync(backupDir)
+      .filter((f) => f.startsWith('alog_') && f.endsWith('.db.gz'))
+      .map((f) => fs.statSync(path.join(backupDir, f)).mtime)
+      .sort((a, b) => b.getTime() - a.getTime())
+    return { count: files.length, latestAt: files[0] ?? null }
+  } catch {
+    return { count: 0, latestAt: null }
+  }
 }
 
 // Cache DB queries for 30 seconds to avoid hitting SQLite on every request
@@ -44,6 +62,18 @@ export default async function Sidebar() {
   const heapColor = heapPct >= 80 ? '#f87171' : heapPct >= 60 ? '#fb923c' : 'var(--accent-green)'
 
   const { totalLogs, dailyCount, blogCount, todayCount, topTags } = await getSidebarData()
+  const backup = getBackupStatus()
+
+  // Format backup time as relative string
+  function fmtBackupTime(d: Date | null): string {
+    if (!d) return '暂无备份'
+    const diff = Date.now() - d.getTime()
+    const hours = Math.floor(diff / 3600000)
+    if (hours < 1) return '刚刚'
+    if (hours < 24) return `${hours} 小时前`
+    const days = Math.floor(hours / 24)
+    return `${days} 天前`
+  }
 
   const categories = [
     { label: '全部日志', href: '/logs',  icon: '◈', count: totalLogs },
@@ -93,6 +123,23 @@ export default async function Sidebar() {
           <div className="sb-metric-right">
             <span className="sb-metric-num">{external}</span>
             <span className="sb-metric-unit">MB</span>
+          </div>
+        </div>
+
+        {/* Backup Status */}
+        <div className="sb-metric-row" style={{ marginTop: 8 }}>
+          <span className="sb-metric-key">Backup</span>
+          <div className="sb-metric-right">
+            <span className="sb-metric-num" style={{ color: backup.latestAt ? 'var(--accent-green)' : '#f87171' }}>
+              {fmtBackupTime(backup.latestAt)}
+            </span>
+          </div>
+        </div>
+        <div className="sb-metric-row">
+          <span className="sb-metric-key">Archives</span>
+          <div className="sb-metric-right">
+            <span className="sb-metric-num">{backup.count}</span>
+            <span className="sb-metric-unit">files</span>
           </div>
         </div>
       </div>

@@ -4,6 +4,16 @@
 
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [1.11.0] - 2026-03-12
+
+### 新增
+- `deploy/backup.sh`：SQLite 定期备份脚本，使用 `sqlite3 .backup` 安全备份，自动 gzip 压缩，保留最近 60 天
+- `GET /api/backup-status`：只读备份元信息接口，返回备份文件数量和最近备份时间
+- 侧边栏 System Status 面板新增 `Backup`（最近备份时间）和 `Archives`（累计备份数）两个字段
+- 服务器 crontab 配置：`0 3 */2 * * backup.sh`，每 2 天凌晨 3 点自动执行
+
+---
+
 ## [1.10.3] - 2026-03-12
 
 ### 修复
