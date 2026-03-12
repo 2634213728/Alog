@@ -38,6 +38,9 @@ async function request(path, opts) {
   }
   return res.json();
 }
+function utf8Body(data) {
+  return Buffer.from(JSON.stringify(data), "utf-8");
+}
 async function listLogs(params) {
   const qs = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
@@ -58,14 +61,14 @@ async function pushLog(body) {
   return request("/api/logs", {
     method: "POST",
     headers: authHeaders(),
-    body: JSON.stringify({ ...body, source: body.source ?? config.source })
+    body: utf8Body({ ...body, source: body.source ?? config.source })
   });
 }
 async function updateLog(id, body) {
   return request(`/api/logs/${id}`, {
     method: "PATCH",
     headers: authHeaders(),
-    body: JSON.stringify(body)
+    body: utf8Body(body)
   });
 }
 async function deleteLog(id) {

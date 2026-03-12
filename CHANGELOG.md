@@ -4,6 +4,16 @@
 
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [1.10.1] - 2026-03-12
+
+### 修复
+- `alog-mcp`：`push_log` / `update_log` 写入含非 ASCII 字符（中文、日文等）时内容乱码
+- 根因：Node.js `fetch` 将字符串 body 转为字节时在 Windows 下使用系统默认编码（非 UTF-8），导致多字节 UTF-8 序列损坏，存入数据库后显示为 `♦♦♦`
+- 修复方案：`client.ts` 中新增 `utf8Body()` 辅助函数，显式用 `Buffer.from(JSON.stringify(data), 'utf-8')` 编码，强制 UTF-8 字节传输（与 PowerShell 脚本的 `[System.Text.Encoding]::UTF8.GetBytes()` 同理）
+- npm 已发布：`alog-mcp@1.0.1`
+
+---
+
 ## [1.10.0] - 2026-03-12
 
 ### 新增

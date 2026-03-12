@@ -54,6 +54,16 @@ async function request<T>(path: string, opts?: RequestInit): Promise<T> {
   return res.json() as Promise<T>
 }
 
+/**
+ * Serialize body to UTF-8 bytes explicitly.
+ * Node.js fetch may use the system's default encoding for string bodies on Windows,
+ * corrupting multibyte characters (Chinese, Japanese, etc.).
+ * Passing a Buffer forces UTF-8 regardless of system locale.
+ */
+function utf8Body(data: unknown): Buffer {
+  return Buffer.from(JSON.stringify(data), 'utf-8')
+}
+
 // ── read operations (no auth required) ─────────────────────────────────────
 
 export async function listLogs(params: Record<string, string | number>): Promise<AlogListResponse> {
@@ -89,7 +99,7 @@ export async function pushLog(body: {
   return request('/api/logs', {
     method: 'POST',
     headers: authHeaders(),
-    body: JSON.stringify({ ...body, source: body.source ?? config.source }),
+    body: utf8Body({ ...body, source: body.source ?? config.source }),
   })
 }
 
@@ -100,7 +110,7 @@ export async function updateLog(
   return request(`/api/logs/${id}`, {
     method: 'PATCH',
     headers: authHeaders(),
-    body: JSON.stringify(body),
+    body: utf8Body(body),
   })
 }
 
