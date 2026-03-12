@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import ThemeProvider from "@/components/ThemeProvider";
+import BackgroundFX from "@/components/BackgroundFX";
+import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
   title: "Alog — AI 工作日志",
@@ -29,10 +31,14 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <ThemeProvider>
+          <BackgroundFX />
           <Header />
-          <main className="max-w-4xl mx-auto px-4 py-8">
-            {children}
-          </main>
+          <div className="alog-layout">
+            <Sidebar />
+            <main className="alog-main">
+              {children}
+            </main>
+          </div>
         </ThemeProvider>
       </body>
     </html>

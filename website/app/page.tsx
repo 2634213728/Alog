@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import LogCard from '@/components/LogCard'
 import TagBadge from '@/components/TagBadge'
 import Link from 'next/link'
+import StatCounterGrid from '@/components/StatCounterGrid'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,7 +45,7 @@ export default async function HomePage() {
   const recentLogs = await prisma.log.findMany({
     include: { tags: { include: { tag: true } } },
     orderBy: { createdAt: 'desc' },
-    take: 5,
+    take: 6,
   })
 
   const topTags = await prisma.tag.findMany({
@@ -54,12 +55,10 @@ export default async function HomePage() {
   })
 
   const STATS = [
-    { label: '日志总数', value: totalLogs, unit: '条', icon: '📋', href: '/logs',   accent: 'var(--accent)' },
-    { label: '工作日报', value: dailyCount, unit: '篇', icon: '📅', href: '/daily',  accent: 'var(--accent-green)' },
-    { label: '技术博客', value: blogCount,  unit: '篇', icon: '📝', href: '/blog',   accent: 'var(--accent2)' },
-    { label: '标签数量', value: tags,       unit: '个', icon: '🏷️', href: '/tags',   accent: '#f59e0b' },
-    { label: '参与作者', value: authorCount, unit: '人', icon: '👤', href: '/authors', accent: '#f97316' },
-    { label: '累计阅读', value: totalViews, unit: '次', icon: '👁',  href: '/logs',   accent: 'var(--accent)' },
+    { label: '日志总数', value: totalLogs,   unit: '条', icon: '📋', href: '/logs',    accent: 'var(--accent)',       iconBg: 'rgba(var(--accent-rgb),0.12)' },
+    { label: '工作日报', value: dailyCount,  unit: '篇', icon: '📅', href: '/daily',   accent: 'var(--accent-green)', iconBg: 'rgba(16,185,129,0.12)' },
+    { label: '技术博客', value: blogCount,   unit: '篇', icon: '📝', href: '/blog',    accent: 'var(--accent2)',      iconBg: 'rgba(var(--accent2-rgb),0.12)' },
+    { label: '累计阅读', value: totalViews,  unit: '次', icon: '👁',  href: '/logs',   accent: 'var(--accent)',       iconBg: 'rgba(var(--accent-rgb),0.12)' },
   ]
 
   return (
@@ -67,14 +66,14 @@ export default async function HomePage() {
 
       {/* ——— Hero ——— */}
       <section className="pt-4 space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-mono"
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-mono badge-scan"
           style={{ borderColor: 'rgba(var(--accent-rgb),0.25)', background: 'rgba(var(--accent-rgb),0.06)', color: 'var(--accent)' }}>
           <span className="w-1.5 h-1.5 rounded-full animate-glow" style={{ background: 'var(--accent)' }} />
           AI Work Log Platform
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold font-mono tracking-tight leading-tight"
           style={{ color: 'var(--text-primary)' }}>
-          <span className="text-glow-cyan" style={{ color: 'var(--accent)' }}>ALOG</span>
+          <span className="hero-neon logo-shimmer">ALOG</span>
           <br />
           <span className="text-2xl sm:text-3xl font-semibold" style={{ color: 'var(--text-secondary)' }}>
             AI 编程工作日志聚合平台
@@ -100,33 +99,13 @@ export default async function HomePage() {
 
       {/* ——— Stats grid ——— */}
       <section className="space-y-3">
-        <h2 className="text-xs font-mono uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
-          数据概览
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {STATS.map((s) => (
-            <Link key={s.label} href={s.href} className="stat-card p-4 block group">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xl">{s.icon}</span>
-                <span className="text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity"
-                  style={{ color: s.accent }}>→</span>
-              </div>
-              <div className="text-3xl font-bold font-mono leading-none mb-1"
-                style={{ color: s.accent }}>
-                {s.value.toLocaleString()}
-                <span className="text-sm font-normal ml-1" style={{ color: 'var(--text-muted)' }}>{s.unit}</span>
-              </div>
-              <div className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>{s.label}</div>
-            </Link>
-          ))}
-        </div>
+        <h2 className="cyber-section-title">数据概览</h2>
+        <StatCounterGrid stats={STATS} cols={4} />
       </section>
 
       {/* ——— Features ——— */}
       <section className="space-y-3">
-        <h2 className="text-xs font-mono uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
-          核心特性
-        </h2>
+        <h2 className="cyber-section-title">核心特性</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {FEATURES.map((f) => (
             <div key={f.title} className="feature-card p-5 space-y-3">
@@ -144,15 +123,13 @@ export default async function HomePage() {
       {recentLogs.length > 0 && (
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-mono uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
-              最新动态
-            </h2>
+            <h2 className="cyber-section-title">最新动态</h2>
             <Link href="/logs" className="text-xs font-mono transition-colors"
               style={{ color: 'var(--accent)' }}>
               查看全部 →
             </Link>
           </div>
-          <div className="space-y-4">
+          <div className="logs-grid-2">
             {recentLogs.map((log) => (
               <LogCard key={log.id} {...log} createdAt={log.createdAt.toISOString()} />
             ))}
@@ -163,9 +140,7 @@ export default async function HomePage() {
       {/* ——— Tag cloud ——— */}
       {topTags.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-xs font-mono uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
-            热门标签
-          </h2>
+          <h2 className="cyber-section-title">热门标签</h2>
           <div className="flex flex-wrap gap-2">
             {topTags.map((tag) => (
               <TagBadge key={tag.id} name={tag.name} slug={tag.slug} count={tag._count.logs} size="md" />

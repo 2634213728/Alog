@@ -57,7 +57,7 @@ export default async function LogsPage() {
           <p className="text-sm font-mono" style={{ color: 'var(--text-muted)' }}>暂无日志</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="logs-grid-2">
           {logs.map((log) => (
             <LogCard key={log.id} {...log} createdAt={log.createdAt.toISOString()} />
           ))}

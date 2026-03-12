@@ -85,7 +85,7 @@ function KeyManager({ onSelectKey }: { onSelectKey: (key: string, source: string
     <div className="alog-card p-5 space-y-5">
       {/* Admin token input */}
       <div className="space-y-2">
-        <label className="text-xs font-mono text-slate-500 uppercase tracking-wider">Admin Token</label>
+        <label className="text-xs font-mono uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Admin Token</label>
         <div className="flex gap-2">
           <input
             type="password"
@@ -93,7 +93,7 @@ function KeyManager({ onSelectKey }: { onSelectKey: (key: string, source: string
             value={adminToken}
             onChange={(e) => setAdminToken(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && fetchKeys(adminToken)}
-            className="flex-1 bg-[#080b14] border border-[#1e2d40] rounded-md px-3 py-2 text-sm font-mono text-slate-300 placeholder-slate-600 focus:outline-none focus:border-[#00d4ff40] focus:ring-1 focus:ring-[#00d4ff20] transition-colors"
+            className="alog-input flex-1 rounded-md px-3 py-2 text-sm font-mono"
           />
           <button
             onClick={() => fetchKeys(adminToken)}
@@ -109,27 +109,30 @@ function KeyManager({ onSelectKey }: { onSelectKey: (key: string, source: string
       {/* Key list */}
       {keys.length > 0 && (
         <div className="space-y-2">
-          <p className="text-xs font-mono text-slate-500 uppercase tracking-wider">已有 API Keys ({keys.length})</p>
+          <p className="text-xs font-mono uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>已有 API Keys ({keys.length})</p>
           <div className="space-y-2">
             {keys.map((k) => (
-              <div key={k.id} className="flex items-center gap-3 p-3 bg-[#080b14] border border-[#1e2d40] rounded-lg group">
-                <div className="flex-1 min-w-0 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-[#e2e8f0] font-medium truncate">{k.name}</span>
+                <div key={k.id} className="flex items-center gap-3 p-3 rounded-lg group alog-card">
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>{k.name}</span>
                     <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono border ${sourceColor(k.source)}`}>
                       {k.source}
                     </span>
                     {k.author && (
-                      <span className="text-[10px] font-mono text-slate-500">{k.author}</span>
+                      <span className="text-[10px] font-mono" style={{ color: 'var(--text-muted)' }}>{k.author}</span>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <code className="text-xs font-mono text-slate-400 truncate">
+                      <code className="text-xs font-mono truncate" style={{ color: 'var(--text-secondary)' }}>
                       {revealed[k.id] ? k.key : k.key.slice(0, 8) + '••••••••••••••••••••••••••••••••'}
                     </code>
                     <button
                       onClick={() => setRevealed((prev) => ({ ...prev, [k.id]: !prev[k.id] }))}
-                      className="text-[10px] text-slate-600 hover:text-slate-400 font-mono shrink-0"
+                      className="text-[10px] font-mono shrink-0 transition-colors"
+                      style={{ color: 'var(--text-muted)' }}
+                      onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-primary)')}
+                      onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}
                     >
                       {revealed[k.id] ? '隐藏' : '显示'}
                     </button>
@@ -159,8 +162,8 @@ function KeyManager({ onSelectKey }: { onSelectKey: (key: string, source: string
 
       {/* Create new key */}
       {adminToken && (
-        <div className="space-y-2 pt-2 border-t border-[#1e2d40]">
-          <p className="text-xs font-mono text-slate-500 uppercase tracking-wider">创建新 Key</p>
+        <div className="border-t pt-4 space-y-3" style={{ borderColor: 'var(--border)' }}>
+          <p className="text-xs font-mono uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>创建新 Key</p>
           <div className="flex gap-2">
             <input
               type="text"
@@ -168,19 +171,19 @@ function KeyManager({ onSelectKey }: { onSelectKey: (key: string, source: string
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && createKey()}
-              className="flex-1 bg-[#080b14] border border-[#1e2d40] rounded-md px-3 py-2 text-sm font-mono text-slate-300 placeholder-slate-600 focus:outline-none focus:border-[#00d4ff40] focus:ring-1 focus:ring-[#00d4ff20] transition-colors"
+              className="alog-input flex-1 rounded-md px-3 py-2 text-sm font-mono"
             />
             <input
               type="text"
               placeholder="作者名（可选）"
               value={newAuthor}
               onChange={(e) => setNewAuthor(e.target.value)}
-              className="w-28 bg-[#080b14] border border-[#1e2d40] rounded-md px-3 py-2 text-sm font-mono text-slate-300 placeholder-slate-600 focus:outline-none focus:border-[#00d4ff40] focus:ring-1 focus:ring-[#00d4ff20] transition-colors"
+              className="alog-input w-28 rounded-md px-3 py-2 text-sm font-mono"
             />
             <select
               value={newSource}
               onChange={(e) => setNewSource(e.target.value)}
-              className="bg-[#080b14] border border-[#1e2d40] rounded-md px-3 py-2 text-sm font-mono text-slate-300 focus:outline-none focus:border-[#00d4ff40] transition-colors"
+              className="alog-input rounded-md px-3 py-2 text-sm font-mono"
             >
               <option value="cursor">cursor</option>
               <option value="copilot">copilot</option>
@@ -360,8 +363,9 @@ function CopyButton({ text, label = '复制' }: { text: string; label?: string }
       className={`px-3 py-1 text-xs font-mono rounded border transition-all duration-200 ${
         copied
           ? 'border-[#10b981] text-[#10b981] bg-[#10b98115]'
-          : 'border-[#1e2d40] text-slate-400 hover:border-[#00d4ff40] hover:text-[#00d4ff]'
+          : 'hover:text-[#00d4ff] hover:border-[#00d4ff40]'
       }`}
+      style={copied ? {} : { borderColor: 'var(--border)', color: 'var(--text-secondary)' }}
     >
       {copied ? '✓ 已复制' : label}
     </button>
@@ -374,7 +378,7 @@ function CodeBlock({ code }: { code: string }) {
       <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         <CopyButton text={code} />
       </div>
-      <pre className="bg-[#080b14] border border-[#1e2d40] rounded-lg p-4 text-sm font-mono text-slate-300 overflow-x-auto leading-relaxed whitespace-pre-wrap max-h-96 overflow-y-auto">
+      <pre className="alog-card rounded-lg p-4 text-sm font-mono overflow-x-auto leading-relaxed whitespace-pre-wrap max-h-96 overflow-y-auto" style={{ background: 'var(--bg-secondary, var(--card-bg))', color: 'var(--text-secondary)', borderColor: 'var(--border)' }}>
         <code>{code}</code>
       </pre>
     </div>
@@ -421,38 +425,38 @@ export default function SetupPage() {
       <section className="space-y-4">
         <div className="flex items-center gap-3">
           <StepBadge n={1} />
-          <h2 className="text-lg font-semibold text-[#e2e8f0] font-mono">配置连接信息</h2>
+          <h2 className="text-lg font-semibold font-mono" style={{ color: 'var(--text-primary)' }}>配置连接信息</h2>
         </div>
 
         <div className="alog-card p-5 space-y-5">
           {/* Config inputs */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono text-slate-500 uppercase tracking-wider">API Key <span className="text-red-400">*</span></label>
+              <label className="text-xs font-mono uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>API Key <span className="text-red-400">*</span></label>
               <input
                 type="text"
                 placeholder="alog_xxxx..."
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="w-full bg-[#080b14] border border-[#1e2d40] rounded-md px-3 py-2 text-sm font-mono text-slate-300 placeholder-slate-600 focus:outline-none focus:border-[#00d4ff40] focus:ring-1 focus:ring-[#00d4ff20] transition-colors"
+                className="alog-input w-full rounded-md px-3 py-2 text-sm font-mono"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-mono text-slate-500 uppercase tracking-wider">Server URL <span className="text-red-400">*</span></label>
+              <label className="text-xs font-mono uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Server URL <span className="text-red-400">*</span></label>
               <input
                 type="text"
                 placeholder="http://your-server:3000"
                 value={server}
                 onChange={(e) => setServer(e.target.value)}
-                className="w-full bg-[#080b14] border border-[#1e2d40] rounded-md px-3 py-2 text-sm font-mono text-slate-300 placeholder-slate-600 focus:outline-none focus:border-[#00d4ff40] focus:ring-1 focus:ring-[#00d4ff20] transition-colors"
+                className="alog-input w-full rounded-md px-3 py-2 text-sm font-mono"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-mono text-slate-500 uppercase tracking-wider">Source</label>
+              <label className="text-xs font-mono uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Source</label>
               <select
                 value={source}
                 onChange={(e) => setSource(e.target.value)}
-                className="w-full bg-[#080b14] border border-[#1e2d40] rounded-md px-3 py-2 text-sm font-mono text-slate-300 focus:outline-none focus:border-[#00d4ff40] focus:ring-1 focus:ring-[#00d4ff20] transition-colors"
+                className="alog-input w-full rounded-md px-3 py-2 text-sm font-mono"
               >
                 <option value="cursor">cursor</option>
                 <option value="copilot">copilot</option>
@@ -463,8 +467,8 @@ export default function SetupPage() {
           </div>
 
           {/* Key Manager */}
-          <div className="border-t border-[#1e2d40] pt-4 space-y-3">
-            <p className="text-xs font-mono text-slate-500 uppercase tracking-wider">或从 Key 管理器选择</p>
+          <div className="border-t pt-3 space-y-3" style={{ borderColor: 'var(--border)' }}>
+            <p className="text-xs font-mono uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>或从 Key 管理器选择</p>
             <KeyManager onSelectKey={(key, src) => { setApiKey(key); setSource(src) }} />
           </div>
         </div>
@@ -474,7 +478,7 @@ export default function SetupPage() {
       <section className="space-y-4">
         <div className="flex items-center gap-3">
           <StepBadge n={2} />
-          <h2 className="text-lg font-semibold text-[#e2e8f0] font-mono">复制规则文件到 AI 工具</h2>
+          <h2 className="text-lg font-semibold font-mono" style={{ color: 'var(--text-primary)' }}>复制规则文件到 AI 工具</h2>
         </div>
 
         {!isConfigured && (
@@ -492,8 +496,9 @@ export default function SetupPage() {
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-mono transition-all duration-200 ${
                 activeTool === i
                   ? 'text-[#00d4ff] bg-[#00d4ff12] border-[#00d4ff30]'
-                  : 'text-slate-400 border-[#1e2d40] hover:text-slate-200 hover:border-[#2e3d50]'
+                  : 'hover:text-[#00d4ff] hover:border-[#00d4ff40]'
               }`}
+              style={activeTool !== i ? { borderColor: 'var(--border)', color: 'var(--text-secondary)' } : {}}
             >
               <span>{tool.icon}</span>
               <span>{tool.name}</span>
@@ -507,13 +512,13 @@ export default function SetupPage() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xl">{selectedTool.icon}</span>
-                <h3 className="font-semibold text-[#e2e8f0] font-mono">{selectedTool.name}</h3>
+                <h3 className="font-semibold font-mono" style={{ color: 'var(--text-primary)' }}>{selectedTool.name}</h3>
               </div>
-              <p className="text-xs text-slate-500">{selectedTool.description}</p>
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{selectedTool.description}</p>
             </div>
             <div className="flex items-center gap-2 flex-wrap shrink-0">
               {selectedTool.filePath !== 'system-prompt' && (
-                <code className="text-xs font-mono px-2 py-1 bg-[#080b14] border border-[#1e2d40] rounded text-slate-400">
+                <code className="text-xs font-mono px-2 py-1 rounded" style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
                   {selectedTool.filePath}
                 </code>
               )}
@@ -523,14 +528,14 @@ export default function SetupPage() {
 
           <div className="flex items-start gap-2 p-3 bg-[#00d4ff08] border border-[#00d4ff20] rounded-lg">
             <span className="text-[#00d4ff] text-sm mt-0.5 shrink-0">💡</span>
-            <p className="text-xs text-slate-400 leading-relaxed">{selectedTool.hint}</p>
+            <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{selectedTool.hint}</p>
           </div>
 
           {/* Preview */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-mono text-slate-500 uppercase tracking-wider">
-                规则文件预览{isConfigured ? <span className="ml-2 text-[#10b981]">✓ 已内嵌凭证</span> : <span className="ml-2 text-slate-600">（填写凭证后自动填充）</span>}
+              <p className="text-xs font-mono uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                规则文件预览{isConfigured ? <span className="ml-2" style={{ color: '#10b981' }}>✓ 已内嵌凭证</span> : <span className="ml-2" style={{ color: 'var(--text-muted)' }}>（填写凭证后自动填充）</span>}
               </p>
             </div>
             <CodeBlock code={rulesContent} />
@@ -540,11 +545,11 @@ export default function SetupPage() {
 
       {/* Quick verify */}
       <section className="space-y-3">
-        <h2 className="text-base font-semibold text-slate-400 font-mono flex items-center gap-2">
-          <span className="text-slate-600">//</span> 快速验证
+        <h2 className="text-base font-semibold font-mono flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+          <span style={{ color: 'var(--text-muted)' }}>//</span> 快速验证
         </h2>
         <div className="alog-card p-4 space-y-3">
-          <p className="text-slate-500 text-xs">配置完成后，直接在终端执行以下命令验证连通性：</p>
+        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>配置完成后，直接在终端执行以下命令验证连通性：</p>
           <CodeBlock code={`# curl
 curl -s -X POST ${server || 'http://your-server:3000'}/api/logs \\
   -H "Authorization: Bearer ${apiKey || 'YOUR_API_KEY'}" \\

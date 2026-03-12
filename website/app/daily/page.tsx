@@ -49,7 +49,7 @@ export default async function DailyPage() {
           <p className="text-xs mt-2" style={{ color: 'var(--text-muted)' }}>对 AI 说「生成alog日报」即可推送</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="logs-grid-2">
           {logs.map((log) => (
             <LogCard key={log.id} {...log} createdAt={log.createdAt.toISOString()} />
           ))}

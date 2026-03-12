@@ -4,6 +4,31 @@
 
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [1.9.0] - 2026-03-12
+
+### 新增
+- 赛博科技视觉风格全面重构：网格背景粒子动画（`BackgroundFX`）、霓虹扫描徽章、Logo 光晕流动、区块标题 Cyber 风格
+- 三栏布局：左侧固定 Sidebar + 顶部 Header + 主内容区（`alog-layout`）
+- `Sidebar` 组件：Categories 日志分类计数、Hot Tags 热门标签、Quick Nav 快速导航、System Status 内存监控面板（`process.memoryUsage()` + 今日推送数）
+- `StatCounterGrid` 组件：IntersectionObserver 滚动触发数字计数动画，支持 3 / 4 列
+- `TableOfContents` 组件：解析 Markdown 标题自动生成目录，IntersectionObserver 高亮当前节，点击平滑滚动，多级缩进
+- 赛博搜索弹窗：点击顶栏搜索按钮弹出全屏毛玻璃遮罩 + 居中面板，支持 Ctrl+K 唤起、Esc 关闭
+- 日志详情双栏布局：文章区（header + 正文）+ 右侧粘性目录栏，≤1100px 自动隐藏目录
+- `MarkdownRenderer` 支持标题自动注入 `id`（`slugifyHeading`），供 TOC 锚点跳转
+
+### 修改
+- Header 精简：移除导航链接，仅保留 Logo + 搜索触发按钮 + 主题切换
+- 日报、博客、全部日志列表页统一改为 `logs-grid-2` 两列卡片网格
+- 首页去除"实时日志推送"Terminal 演示 section
+- `setup` 页面：所有硬编码深色 Tailwind 类替换为 CSS 变量（兼容浅色模式）
+- `changelog` 页面移除内层 `<main>` 包裹，对齐侧边栏布局
+
+### 修复
+- `[type]/[id]/page.tsx` 注释多余 `}` 导致的 ECMAScript 解析错误
+- `TagBadge` 缺少 `'use client'` 指令导致事件处理报错
+
+---
+
 ## [1.8.1] - 2026-03-11
 
 ### 修改

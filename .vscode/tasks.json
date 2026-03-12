@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Alog Dev Server",
+			"type": "shell",
+			"command": "cd d:\\Alog\\website && npm run dev",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Alog Dev Server",
+			"type": "shell",
+			"command": "Set-Location d:\\Alog\\website; npm run dev",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

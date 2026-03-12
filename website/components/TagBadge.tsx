@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 
 interface TagBadgeProps {
@@ -21,10 +23,25 @@ export default function TagBadge({ name, slug, count, active, size = 'sm' }: Tag
         borderColor: 'rgba(var(--accent-rgb),0.38)',
         background: 'rgba(var(--accent-rgb),0.10)',
         color: 'var(--accent)',
+        boxShadow: '0 0 10px rgba(var(--accent-rgb),0.2)',
       } : {
         borderColor: 'var(--border)',
         background: 'var(--card-bg)',
         color: 'var(--text-muted)',
+      }}
+      onMouseEnter={e => {
+        if (!active) {
+          e.currentTarget.style.borderColor = 'rgba(var(--accent-rgb),0.35)'
+          e.currentTarget.style.color = 'var(--accent)'
+          e.currentTarget.style.background = 'rgba(var(--accent-rgb),0.08)'
+        }
+      }}
+      onMouseLeave={e => {
+        if (!active) {
+          e.currentTarget.style.borderColor = 'var(--border)'
+          e.currentTarget.style.color = 'var(--text-muted)'
+          e.currentTarget.style.background = 'var(--card-bg)'
+        }
       }}
     >
       <span className="opacity-60">#</span>

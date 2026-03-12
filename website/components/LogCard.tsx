@@ -99,6 +99,11 @@ export default function LogCard({ id, type, title, content, source, author, crea
       className="alog-card p-5 cursor-pointer group"
       onClick={handleCardClick}
     >
+      {/* Type color indicator strip on left edge */}
+      <div
+        className="absolute left-0 top-0 bottom-0 w-0.5 rounded-l-xl opacity-40 group-hover:opacity-100 transition-opacity duration-300"
+        style={{ background: config.style.color }}
+      />
       {showGate && (
         <TokenGate onVerified={onTokenVerified} onCancel={() => { setShowGate(false); setPendingAction(null) }} />
       )}
@@ -134,8 +139,8 @@ export default function LogCard({ id, type, title, content, source, author, crea
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2 flex-wrap">
           {/* Type badge */}
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-mono font-medium"
-            style={config.style}>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-mono font-medium transition-all duration-200"
+            style={{ ...config.style, boxShadow: `0 0 12px ${config.style.borderColor}` }}>
             {config.icon} {config.label}
           </span>
           {/* Source badge */}
